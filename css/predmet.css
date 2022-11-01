@@ -1,0 +1,16 @@
+#meni ul{
+    display: inline-table;
+}
+ul.no-bullets {
+    list-style-type: none;
+}
+.zajedno{
+    display: inline-block;
+    margin:0 10px;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+
