@@ -13,4 +13,104 @@ html{
     scroll-behavior: smooth;
 }
 
+.rs_1{
+    display: grid;
+    background-color: #2196F3;
+    padding: 10px;
+    column-gap: 10px;
+    row-gap: 1em;
+    grid-template-columns:
+        minmax(200px, max-content)
+        repeat(auto-fill, 200px) 10%;
+}
+
+.rs_2{
+    display: grid;
+    background-color: #2196F3;
+    padding: 10px;
+    column-gap: 10px;
+    row-gap: 1em;
+    grid-template-columns:
+        minmax(200px, max-content)
+        repeat(auto-fill, 200px) 10%;
+}
+
+.bsc_1{
+    display: grid;
+    background-color: #2196F3;
+    padding: 10px;
+    column-gap: 10px;
+    row-gap: 1em;
+    grid-template-columns:
+        minmax(200px, max-content)
+        repeat(auto-fill, 200px) 10%;
+}
+
+.bsc_2{
+    display: grid;
+    background-color: #2196F3;
+    padding: 10px;
+    column-gap: 10px;
+    row-gap: 1em;
+    grid-template-columns:
+        minmax(200px, max-content)
+        repeat(auto-fill, 200px) 10%;
+}
+
+.bsc_3{
+    display: grid;
+    background-color: #2196F3;
+    padding: 10px;
+    column-gap: 10px;
+    row-gap: 1em;
+    grid-template-columns:
+        minmax(200px, max-content)
+        repeat(auto-fill, 200px) 10%;
+}
+
+.msc_1{
+    display: grid;
+    background-color: #2196F3;
+    padding: 10px;
+    column-gap: 10px;
+    row-gap: 1em;
+    grid-template-columns:
+        minmax(200px, max-content)
+        repeat(auto-fill, 200px) 10%;
+}
+
+.msc_2{
+    display: grid;
+    background-color: #2196F3;
+    padding: 10px;
+    column-gap: 10px;
+    row-gap: 1em;
+    grid-template-columns:
+        minmax(200px, max-content)
+        repeat(auto-fill, 200px) 10%;
+}
+
+.item1{
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    font-size: 15px;
+    min-width: 200px;
+    text-align: center;
+}
+.redovni{
+    border: 4px white solid;
+    font-size: 10px;
+    display: inline;
+}
+
+.izborni{
+    border: 4px powderblue solid;
+    font-size: 10px;
+    display: inline;
+}
+
+.podnaslov{
+    text-align: center;
+    font-size: larger;
+}
 
