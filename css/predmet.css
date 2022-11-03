@@ -43,6 +43,12 @@ html{
     display: inline;
 }
 
+.druga{
+    border: 4px gray solid;
+    font-size: 10px;
+    display: inline;
+}
+
 .podnaslov{
     text-align: center;
     font-size: larger;
