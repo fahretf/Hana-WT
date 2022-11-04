@@ -1,9 +1,17 @@
 #meni ul{
     display: inline-table;
 }
+
+#meni{
+    position: sticky;
+    top: 0;
+    background-color: bisque;
+
+}
 ul.no-bullets {
     list-style-type: none;
 }
+
 .zajedno{
     display: inline-block;
     margin:0 10px;
@@ -11,11 +19,12 @@ ul.no-bullets {
 
 html{
     scroll-behavior: smooth;
+    scroll-padding-top: 7rem;
 }
 
 .rs_1, .rs_2, .bsc_1, .bsc_2, .bsc_3, .msc_1, .msc_2{
     display: grid;
-    background-color: #2196F3;
+    background-color: white;
     padding: 10px;
     column-gap: 10px;
     row-gap: 1em;
@@ -25,7 +34,7 @@ html{
 }
 
 .item1{
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color:blanchedalmond;
     border: 1px solid rgba(0, 0, 0, 0.8);
     font-size: 15px;
     width: 200px;
