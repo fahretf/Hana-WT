@@ -3,13 +3,13 @@
 }
 
 body{
-    background-color: aliceblue;
+    background-color:thistle;
 }
 
 #meni{
     position: sticky;
     top: 0;
-    background-color: bisque;
+    background-color: rgb(141, 181, 152);
     margin-top: -15px;
     margin-left: -15px;
     margin-right: -15px;
@@ -31,7 +31,7 @@ html{
 
 .rs_1, .rs_2, .bsc_1, .bsc_2, .bsc_3, .msc_1, .msc_2{
     display: grid;
-    background-color: aliceblue;
+    background-color:thistle;
     padding: 10px;
     column-gap: 10px;
     row-gap: 1em;
@@ -52,34 +52,32 @@ img{
     display: inline;
     margin-top: 10px;
 }
+
 .redovni{
     border: 4px white solid;
     display: inline;
-    background-color:blanchedalmond;
-    /* border: 1px solid rgba(0, 0, 0, 0.8); */
     font-size: 15px;
     width: 200px;
     text-align: center;
+    background-color: rgb(141, 181, 152);
 }
 
 .izborni{
     border: 4px powderblue solid;
     display: inline;
-    background-color:blanchedalmond;
-    /* border: 1px solid rgba(0, 0, 0, 0.8); */
     font-size: 15px;
     width: 200px;
     text-align: center;
+    background-color: rgb(141, 181, 152);
 }
 
 .druga{
     border: 4px gray solid; 
     display: inline;
-    background-color:blanchedalmond;
-    /* border: 1px solid rgba(0, 0, 0, 0.8); */
     font-size: 15px;
     width: 200px;
     text-align: center;
+    background-color: rgb(141, 181, 152);
 }
 
 h2{
