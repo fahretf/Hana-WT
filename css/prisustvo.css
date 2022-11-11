@@ -5,6 +5,19 @@ table, th, td{
     text-align: start;
 }
 
+table{
+   margin: 0 auto;
+}
+
+h1{
+    text-align: center;
+}
+
+p{
+    text-align: center;
+    font-size: large;
+}
+
 
 .zelena{
     background-color: rgb(148,196,124);

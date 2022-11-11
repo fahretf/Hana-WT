@@ -2,10 +2,17 @@
     display: inline-table;
 }
 
+body{
+    background-color: aliceblue;
+}
+
 #meni{
     position: sticky;
     top: 0;
     background-color: bisque;
+    margin-top: -15px;
+    margin-left: -15px;
+    margin-right: -15px;
 
 }
 ul.no-bullets {
@@ -24,7 +31,7 @@ html{
 
 .rs_1, .rs_2, .bsc_1, .bsc_2, .bsc_3, .msc_1, .msc_2{
     display: grid;
-    background-color: white;
+    background-color: aliceblue;
     padding: 10px;
     column-gap: 10px;
     row-gap: 1em;
@@ -33,29 +40,50 @@ html{
         repeat(auto-fill, 200px);
 }
 
-.item1{
+@media screen and (max-width : 700px) {
+    #meni ul{
+        display:list-item;
+    }
+}
+
+
+img{
+    width: 35px;
+    display: inline;
+    margin-top: 10px;
+}
+.redovni{
+    border: 4px white solid;
+    display: inline;
     background-color:blanchedalmond;
-    border: 1px solid rgba(0, 0, 0, 0.8);
+    /* border: 1px solid rgba(0, 0, 0, 0.8); */
     font-size: 15px;
     width: 200px;
     text-align: center;
 }
-.redovni{
-    border: 4px white solid;
-    font-size: 10px;
-    display: inline;
-}
 
 .izborni{
     border: 4px powderblue solid;
-    font-size: 10px;
     display: inline;
+    background-color:blanchedalmond;
+    /* border: 1px solid rgba(0, 0, 0, 0.8); */
+    font-size: 15px;
+    width: 200px;
+    text-align: center;
 }
 
 .druga{
-    border: 4px gray solid;
-    font-size: 10px;
+    border: 4px gray solid; 
     display: inline;
+    background-color:blanchedalmond;
+    /* border: 1px solid rgba(0, 0, 0, 0.8); */
+    font-size: 15px;
+    width: 200px;
+    text-align: center;
+}
+
+h2{
+    text-align: center;
 }
 
 .podnaslov{
