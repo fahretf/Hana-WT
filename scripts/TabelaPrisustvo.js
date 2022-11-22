@@ -141,7 +141,8 @@ export let TabelaPrisustvo = function (divRef, podaci) {
                         else{
                             const cell = document.createElement("td");
                             const cellText = document.createTextNode("");
-                            cell.appendChild(cellText);if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
+                            cell.appendChild(cellText);
+                            if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
                             else cell.style.background = "rgb(232,100,100)";
                             ukupnoPrisustvo--;
                             row2.appendChild(cell);
