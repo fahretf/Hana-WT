@@ -43,8 +43,6 @@ let podaci = {studenti: [
 }
 
 //instanciranje
-
-
 let prisustvo = TabelaPrisustvo(div, podaci);
 //{studenti: [{ime:"Neko",index:12345}], prisustva:[{sedmica:1,predavanja:1,vjezbe:1,index:12345}], predmet:"WT", brojPredavanjaSedmicno:3, brojVjezbiSedmicno:2}
 //pozivanje metoda

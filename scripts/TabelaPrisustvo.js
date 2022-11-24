@@ -3,6 +3,83 @@ export let TabelaPrisustvo = function (divRef, podaci) {
 
     divRef.innerHTML = "";
 
+    //{studenti: [{ime:"Neko",index:12345}], 
+    //prisustva:[{sedmica:1,predavanja:1,vjezbe:1,index:12345}], 
+    //predmet:"WT", brojPredavanjaSedmicno:3, brojVjezbiSedmicno:2}
+    //validacija
+    var validni = 1;
+
+    //Broj prisustva na predavanju/vježbi je veći od broja predavanja/vježbi sedmično
+    //Broj prisustva je manji od nule
+    for(let i=0; i<podaci.prisustva.length; i++){
+        if(podaci.prisustva[i].predavanja > podaci.brojPredavanjaSedmicno || podaci.prisustva[i].vjezbe>podaci.brojVjezbiSedmicno) validni = 0;
+        else if(podaci.prisustva[i].predavanja < 0 || podaci.prisustva[i].vjezbe < 0) validni = 0; 
+    }
+    //console.log("Prva validacija "+validni);
+
+    //Isti student ima dva ili više unosa prisustva za istu sedmicu
+    for(let i=0; i<podaci.prisustva.length; i++){
+        var indeks = podaci.prisustva[i].indeks;
+        var s = podaci.prisustva[i].sedmica;
+        for(let j=i+1; j<podaci.prisustva.length; j++){
+            if(podaci.prisustva[j].index == indeks && podaci.prisustva[j].sedmica == s) validni = 0;
+        }
+    }
+    //console.log("2. validacija "+validni);
+
+    //Postoje dva ili više studenata sa istim indeksom u listi studenata
+    for(let i=0; i<podaci.studenti.length; i++){
+        var indeks = podaci.studenti[i].index;
+        var nasao = 0;
+        for(let j=0; j<podaci.studenti.length; j++){
+            if(indeks == podaci.studenti[j].index) nasao = 1;
+        }
+        if(!nasao) validni = 0;
+    }
+    //console.log("3. validacija "+validni);
+
+    //Postoji prisustvo za studenta koji nije u listi studenata
+    for(let i=0; i<podaci.prisustva.length; i++){
+        var nasao = 0;
+        var student = podaci.prisustva[i].index;
+        for(let j=0; j<podaci.studenti.length; j++){
+            if(podaci.studenti[j].index == student){
+                nasao=1;
+                break;
+            }
+        }
+        if(!nasao) validni =0;
+    }
+    //console.log("4. validacija "+validni);
+
+    //Postoji sedmica, između dvije sedmice za koje je uneseno prisustvo bar jednom studentu, u kojoj nema unesenog prisustva. Npr. uneseno je prisustvo za sedmice 1 i 3 ali nijedan student nema prisustvo za sedmicu 2
+    var lista = new Array();
+    for(let i=0; i<podaci.prisustva.length; i++){
+        lista.push(podaci.prisustva[i].sedmica);
+    }
+    var listaHelper = new Array();
+    for(let i=0; i<lista.length; i++){
+        if(listaHelper.indexOf(lista[i]) === -1) listaHelper.push(lista[i]);
+    }
+    var prvi = listaHelper[0];
+    for(let i=1; i<listaHelper.length; i++){
+        if(listaHelper[i] - 1 != prvi){
+            validni = 0 ;
+            break;
+        }
+        prvi++;
+        
+    }
+    //console.log("5. validacija "+validni);
+
+    if(validni == 0){
+        const naslov = document.createElement("h1");
+        const textNaslova = document.createTextNode("Podaci o prisustvu nisu validni");
+        naslov.appendChild(textNaslova);
+        divRef.appendChild(naslov);
+        return;
+    }
+
     const naslov = document.createElement("h1");
     const textNaslova = document.createTextNode("Naziv predmeta: "+podaci.predmet);
     naslov.appendChild(textNaslova);
@@ -22,7 +99,7 @@ export let TabelaPrisustvo = function (divRef, podaci) {
         }
     }
 
-    var kolone = 2 + br;
+    var kolone = 2 + br+1;
 
     for(let i=0; i<1; i++){
         const row = document.createElement("tr");
@@ -37,6 +114,13 @@ export let TabelaPrisustvo = function (divRef, podaci) {
             else if(j==1){
                 const cell = document.createElement("td");
                 const cellText = document.createTextNode("Index");
+                cell.appendChild(cellText);
+                row.appendChild(cell);
+            }
+            else if (j== kolone-1){
+                const cell = document.createElement("td");
+                var broj = 15-k;
+                const cellText = document.createTextNode(k+"-"+broj);
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
@@ -78,7 +162,7 @@ export let TabelaPrisustvo = function (divRef, podaci) {
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
-            else if(j!=kolone-1){
+            else if(j<kolone-2){
                 const cell = document.createElement("td");
                 var brPredavanja = 0;
                 var brVjezbi = 0;
@@ -99,12 +183,14 @@ export let TabelaPrisustvo = function (divRef, podaci) {
                 row.appendChild(cell);
                 s++;
             }
-            else if(j==kolone-1){
+            else if(j==kolone-2){
                 var ukupnoPrisustvo=0;
+                var usao = 0;
                 for(let m=0; m<podaci.prisustva.length; m++){
                     if(s==podaci.prisustva[m].sedmica){
                         if(podaci.prisustva[m].index == indeks){
                             ukupnoPrisustvo = podaci.prisustva[m].predavanja+podaci.prisustva[m].vjezbe;
+                            usao=1;
                             break;
                         }
                     }
@@ -123,6 +209,7 @@ export let TabelaPrisustvo = function (divRef, podaci) {
                             const cell = document.createElement("td");
                             const cellText = document.createTextNode("");
                             if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
+                            else if(!usao) cell.style.background = "white";
                             else cell.style.background = "rgb(232,100,100)";
                             ukupnoPrisustvo--;
                             cell.appendChild(cellText);
@@ -143,6 +230,7 @@ export let TabelaPrisustvo = function (divRef, podaci) {
                             const cellText = document.createTextNode("");
                             cell.appendChild(cellText);
                             if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
+                            else if(!usao) cell.style.background = "white";
                             else cell.style.background = "rgb(232,100,100)";
                             ukupnoPrisustvo--;
                             row2.appendChild(cell);
@@ -152,6 +240,12 @@ export let TabelaPrisustvo = function (divRef, podaci) {
                     row.appendChild(row2);
                 }
                 
+            }
+            else{
+                const cell = document.createElement("td");
+                const cellText = document.createTextNode("");
+                cell.appendChild(cellText);
+                row.appendChild(cell);
             }
                 
         }
