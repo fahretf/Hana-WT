@@ -59,7 +59,7 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
     var k = 0;
     for(let i=0; i<podaci.studenti.length; i++){
         const row = document.createElement("tr");
-        var indeks = podaci.studenti[k].index;
+        var indeks = podaci.studenti[i].index;
         var s = 1;
         for(let j=0; j<kolone; j++){
             if(j==0){
@@ -261,8 +261,8 @@ export let TabelaPrisustvo = function (divRef, podaci) {
         }
     }
 
-    var kolone = 2 + br+1;
     var trenutnaSedmica = listaHelper[listaHelper.length-1];
+    var kolone = trenutnaSedmica+3;
     popuni(tbl, trenutnaSedmica, podaci, kolone);
     newTable.appendChild(tbl);
     divRef.appendChild(newTable);

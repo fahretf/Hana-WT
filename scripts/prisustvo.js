@@ -9,6 +9,10 @@ let podaci = {studenti: [
         {
             ime: "Drugi Neko",
             index: 12346
+        },
+        {
+            ime: "Hana Bisevac",
+            index: 18628
         }
     ],
     prisustva: [
@@ -23,6 +27,18 @@ let podaci = {studenti: [
             predavanja: 2,
             vjezbe: 2,
             index: 12346
+        },
+        {
+            sedmica: 1,
+            predavanja: 2,
+            vjezbe: 2,
+            index: 18628
+        },
+        {
+            sedmica: 2,
+            predavanja: 2,
+            vjezbe: 2,
+            index: 18628
         },
         {
             sedmica: 2,
@@ -42,6 +58,12 @@ let podaci = {studenti: [
             vjezbe: 1,
             index: 12346
         },
+        {
+            sedmica: 3,
+            predavanja: 2,
+            vjezbe: 2,
+            index: 18628
+        }
         
     ],
     predmet: "Razvoj mobilnih aplikacija",
