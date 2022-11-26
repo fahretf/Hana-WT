@@ -35,7 +35,14 @@ let podaci = {studenti: [
             predavanja: 2,
             vjezbe: 0,
             index: 12346
-        }
+        },
+        {
+            sedmica: 3,
+            predavanja: 1,
+            vjezbe: 1,
+            index: 12346
+        },
+        
     ],
     predmet: "Razvoj mobilnih aplikacija",
     brojPredavanjaSedmicno: 2,
@@ -43,9 +50,9 @@ let podaci = {studenti: [
 }
 
 //instanciranje
-let prisustvo = TabelaPrisustvo(div, podaci, 2);
+let prisustvo = TabelaPrisustvo(div, podaci);
 //{studenti: [{ime:"Neko",index:12345}], prisustva:[{sedmica:1,predavanja:1,vjezbe:1,index:12345}], predmet:"WT", brojPredavanjaSedmicno:3, brojVjezbiSedmicno:2}
 //pozivanje metoda
 
-prisustvo.sljedecaSedmica();
-prisustvo.prethodnaSedmica();
+// prisustvo.sljedecaSedmica();
+// prisustvo.prethodnaSedmica();

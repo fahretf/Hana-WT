@@ -1,3 +1,23 @@
+function getString(k){
+    var text;
+    if(k == 1) text = "I";
+    else if(k == 2) text = "II";
+    else if(k == 3) text = "III";
+    else if(k == 4) text="IV";
+    else if(k == 5) text="V";
+    else if(k == 6) text="VI";
+    else if(k== 7) text="VII";
+    else if(k == 8) text="VIII";
+    else if(k == 9) text ="IX";
+    else if(k==10) text = "X";
+    else if(k==11) text="XI";
+    else if(k==12)text="XII";
+    else if(k == 13) text="XIII";
+    else if(k==14) text="XIV";
+    else  text="XV";
+    return text;
+}
+
 function popuni(tbl, trenutnaSedmica, podaci, kolone) {
     tbl.innerHTML ="";
     var ukupnoPredavanja = podaci.brojPredavanjaSedmicno;
@@ -20,21 +40,14 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
             }
             else if (j == kolone-1){
                 const cell = document.createElement("td");
-                var broj = 15-k;
-                const cellText = document.createTextNode(k+"-"+broj);
+                var text = getString(k);
+                const cellText = document.createTextNode(text+"- XV");
                 cell.appendChild(cellText);
                 row.appendChild(cell);
             }
             else{
                 const cell = document.createElement("td");
-                var text;
-                if(k == 1) text = "I";
-                else if(k == 2) text = "II";
-                else if(k == 3) text = "III";
-                else if(k == 4) text="IV";
-                else if(k == 5) text="V";
-                else if(k == 6) text="VI";
-                else text="VII";
+                var text= getString(k);
                 const cellText = document.createTextNode(text);
                 cell.appendChild(cellText);
                 row.appendChild(cell);
@@ -154,7 +167,7 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
     }
 }
 
-export let TabelaPrisustvo = function (divRef, podaci, trenutnaSedmica) {
+export let TabelaPrisustvo = function (divRef, podaci) {
 
     divRef.innerHTML = "";
 
@@ -249,6 +262,7 @@ export let TabelaPrisustvo = function (divRef, podaci, trenutnaSedmica) {
     }
 
     var kolone = 2 + br+1;
+    var trenutnaSedmica = listaHelper[listaHelper.length-1];
     popuni(tbl, trenutnaSedmica, podaci, kolone);
     newTable.appendChild(tbl);
     divRef.appendChild(newTable);
@@ -256,6 +270,7 @@ export let TabelaPrisustvo = function (divRef, podaci, trenutnaSedmica) {
 
     var buttonPret = document.createElement("button");
     buttonPret.innerHTML = "Previous";
+    //'<i class="fa-solid fa-arrow-left"><svg xmlns="arrow-letf-solid.svg" viewBox="0 0 448 512"><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></i>';
     divRef.appendChild(buttonPret);
 
     var buttonSlj = document.createElement("button");
@@ -278,8 +293,6 @@ export let TabelaPrisustvo = function (divRef, podaci, trenutnaSedmica) {
     buttonSlj.onclick = sljedecaSedmica;
     buttonPret.onclick = prethodnaSedmica;
 
-    // buttonSlj.addEventListener("click", sljedecaSedmica);
-    // buttonPret.addEventListener("click", prethodnaSedmica);
 
     return {
         sljedecaSedmica: sljedecaSedmica,
