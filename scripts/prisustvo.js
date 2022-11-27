@@ -1,5 +1,3 @@
-import {TabelaPrisustvo} from './TabelaPrisustvo.js'
-
 let div = document.getElementById("divSadrzaj");
 let podaci = {studenti: [
         {
@@ -65,6 +63,7 @@ let podaci = {studenti: [
             index: 18628
         }
         
+        
     ],
     predmet: "Razvoj mobilnih aplikacija",
     brojPredavanjaSedmicno: 2,
@@ -72,9 +71,6 @@ let podaci = {studenti: [
 }
 
 //instanciranje
-let prisustvo = TabelaPrisustvo(div, podaci);
+TabelaPrisustvo(div, podaci);
 //{studenti: [{ime:"Neko",index:12345}], prisustva:[{sedmica:1,predavanja:1,vjezbe:1,index:12345}], predmet:"WT", brojPredavanjaSedmicno:3, brojVjezbiSedmicno:2}
-//pozivanje metoda
 
-// prisustvo.sljedecaSedmica();
-// prisustvo.prethodnaSedmica();
