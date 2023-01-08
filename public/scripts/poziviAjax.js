@@ -8,33 +8,59 @@ const PoziviAjax = (()=>{
     // }
     // vraća listu predmeta za loginovanog nastavnika ili grešku da nastavnik nije loginovan
     function impl_getPredmeti(fnCallback){
-
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function(){
+            if(xhttp.readyState == 4 && xhttp.status == 200){
+                if(sessionStorage.length == 0) fnCallback(xhttp.status, null);
+                else fnCallback(null, xhttp.responseText);
+                
+            }
+            else if(xhttp.readyState == 4 && xhttp.status == 401){
+                fnCallback(xhttp.status, null);
+            }
+        }
+        xhttp.open("GET", "http://localhost:3000/predmeti", true);
+        xhttp.send();
     }
 
     
-//fnCallback
     function impl_postLogin(username,password, fnCallback){
         const xhttp = new XMLHttpRequest();
+        
         xhttp.onreadystatechange = function(){
-            if(xhttp.readyState==4 && xhttp.status == 200){
-                sessionStorage.setItem("nastavnik", username.value);
-                fnCallback(null,JSON.parse(xhttp.responseText));
-                console.log(JSON.parse(xhttp.responseText));
-            }
-            else if(xhttp.readyState == 4 && xhttp.status == 401){
-                fnCallback(xhttp.status,JSON.parse(xhttp.responseText));
-                console.log(JSON.parse(xhttp.responseText));
+            if(xhttp.readyState == 4){
+                var result= JSON.parse(xhttp.responseText);
+                if(result.poruka == "Uspješna prijava"){
+                    fnCallback(null,JSON.parse(xhttp.responseText));
+                    location.replace('http://localhost:3000/predmeti');
+                }
+                else if(result.poruka == "Neuspješna prijava"){
+                    fnCallback(xhttp.status,JSON.parse(xhttp.responseText));
+                }
             }
         };
+
         xhttp.open("POST", "http://localhost:3000/login", true);
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.send(JSON.stringify({username:username.value,password:password.value}));
     }
 
 
-    // function impl_postLogout(fnCallback){
-
-    // }
+    function impl_postLogout(fnCallback){
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(){
+            if(xhttp.readyState == 4 && xhttp.status == 200){
+                fnCallback(null, xhttp.status);
+                location.replace("http://localhost:3000"+xhttp.responseText);
+            }
+            else if(xhttp.readyState == 4 && xhttp.status == 401){
+                fnCallback(xhttp.status, null);
+            }
+        }
+        xhttp.open("POST", "http://localhost:3000/logout", true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.send(JSON.stringify({poruka:"Hello and goodbye"}));
+    }
     //prisustvo ima oblik {sedmica:N,predavanja:P,vjezbe:V}
     // function impl_postPrisustvo(naziv,index,prisustvo,fnCallback){
 
@@ -42,7 +68,7 @@ const PoziviAjax = (()=>{
 
     return{
         postLogin: impl_postLogin,
-        //postLogout: impl_postLogout,
+        postLogout: impl_postLogout,
         //getPredmet: impl_getPredmet,
         getPredmeti: impl_getPredmeti
         //postPrisustvo: impl_postPrisustvo
