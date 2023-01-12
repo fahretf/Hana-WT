@@ -3,23 +3,35 @@ const PoziviAjax = (()=>{
     //fnCallback u svim metodama se poziva kada stigne odgovor sa servera putem Ajax-a
     // svaki callback kao parametre ima error i data, error je null ako je status 200 i data je tijelo odgovora
     // ako postoji greška poruka se prosljeđuje u error parametar callback-a, a data je tada null
-    // function impl_getPredmet(naziv,fnCallback){
-
-    // }
+    function impl_getPredmet(naziv,fnCallback){
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(){
+            if(xhttp.readyState == 4 && xhttp.status == 200){
+                fnCallback(null, JSON.parse(xhttp.responseText));
+            }
+            else if(xhttp.readyState == 4 && xhttp.status == 401){
+                fnCallback(JSON.parse(xhttp.status, null));
+            }
+        }
+        console.log("Pozoves li se ikad?");
+        xhttp.open("GET", `http://localhost:3000/predmet/${naziv}`, true);
+        xhttp.send();
+    }
     // vraća listu predmeta za loginovanog nastavnika ili grešku da nastavnik nije loginovan
     function impl_getPredmeti(fnCallback){
         const xhttp = new XMLHttpRequest();
-        xhttp.onload = function(){
+        xhttp.onreadystatechange = function(){
             if(xhttp.readyState == 4 && xhttp.status == 200){
-                if(sessionStorage.length == 0) fnCallback(xhttp.status, null);
-                else fnCallback(null, xhttp.responseText);
-                
+                fnCallback(null, JSON.parse(xhttp.responseText));
             }
             else if(xhttp.readyState == 4 && xhttp.status == 401){
-                fnCallback(xhttp.status, null);
+                fnCallback(JSON.parse(xhttp.status, null));
             }
         }
         xhttp.open("GET", "http://localhost:3000/predmeti", true);
+        // xhttp.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+        // xhttp.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+        // xhttp.setRequestHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
         xhttp.send();
     }
 
@@ -32,9 +44,8 @@ const PoziviAjax = (()=>{
                 var result= JSON.parse(xhttp.responseText);
                 if(result.poruka == "Uspješna prijava"){
                     fnCallback(null,JSON.parse(xhttp.responseText));
-                    location.replace('http://localhost:3000/predmeti');
                 }
-                else if(result.poruka == "Neuspješna prijava"){
+                else if(JSON.parse(xhttp.responseText).poruka == "Neuspješna prijava"){
                     fnCallback(xhttp.status,JSON.parse(xhttp.responseText));
                 }
             }
@@ -69,8 +80,9 @@ const PoziviAjax = (()=>{
     return{
         postLogin: impl_postLogin,
         postLogout: impl_postLogout,
-        //getPredmet: impl_getPredmet,
-        getPredmeti: impl_getPredmeti
+        getPredmeti: impl_getPredmeti,
+        getPredmet: impl_getPredmet
+        
         //postPrisustvo: impl_postPrisustvo
     };
 })();

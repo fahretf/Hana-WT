@@ -62,3 +62,7 @@ td{
 .vkol{
     width: 400px;
 }
+
+#predmet{
+    height: fit-content;
+}
