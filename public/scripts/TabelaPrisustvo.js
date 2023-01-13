@@ -105,6 +105,7 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                         else{
                             const cell = document.createElement("td");
                             const cellText = document.createTextNode("");
+                            cell.setAttribute('id', 'predavanjaP');
                             if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
                             else if(!usao) cell.style.background = "white";
                             else cell.style.background = "rgb(232,100,100)";
@@ -124,6 +125,7 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                         }
                         else{
                             const cell = document.createElement("td");
+                            cell.setAttribute('id', 'vjezbeP');
                             const cellText = document.createTextNode("");
                             cell.appendChild(cellText);
                             if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";

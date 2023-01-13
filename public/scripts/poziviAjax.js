@@ -73,16 +73,28 @@ const PoziviAjax = (()=>{
         xhttp.send(JSON.stringify({poruka:"Hello and goodbye"}));
     }
     //prisustvo ima oblik {sedmica:N,predavanja:P,vjezbe:V}
-    // function impl_postPrisustvo(naziv,index,prisustvo,fnCallback){
 
-    // }
+    function impl_postPrisustvo(naziv,index,prisustvo,fnCallback){
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(){
+            if(xhttp.readyState == 4 && xhttp.status == 200){
+                fnCallback(null, JSON.parse(xhttp.responseText));
+            }
+            else if(xhttp.readyState == 4 && xhttp.status == 401){
+                fnCallback(JSON.parse(xhttp.status, null));
+            }
+        }
+
+        xhttp.open("POST", `http://localhost:3000/prisustvo/predmet/${naziv}/student/${index}`, true);
+        xhttp.setRequestHeader("Content-type", "application/json");
+        xhttp.send(JSON.stringify(prisustvo));
+    }
 
     return{
         postLogin: impl_postLogin,
         postLogout: impl_postLogout,
         getPredmeti: impl_getPredmeti,
-        getPredmet: impl_getPredmet
-        
-        //postPrisustvo: impl_postPrisustvo
+        getPredmet: impl_getPredmet,
+        postPrisustvo: impl_postPrisustvo
     };
 })();
