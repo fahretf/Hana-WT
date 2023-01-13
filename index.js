@@ -47,7 +47,7 @@ app.get('/predmeti', (req, res)=>{
         res.send(session.predmeti);
     }
     else{
-        res.send({greska: "Nastavnik nije loginovan"});
+        res.send(JSON.stringify({greska: "Nastavnik nije loginovan"}));
     }
 })
 
@@ -71,13 +71,12 @@ app.post('/prisustvo/predmet/:naziv/student/:index', (req, res) => {
         let indeks = req.params.index;
         var obj = JSON.parse(data);
         console.log("OBJEKAT JE STAA "+ obj[0].predmet);
+        var usao = 0;
         for(i in obj){
             if(obj[i].predmet == naziv){
                 var prisustva = obj[i].prisustva;
-                var usao = 0;
                 for(let j in prisustva){
                     if(prisustva[j].index == indeks && tijelo.sedmica == prisustva[j].sedmica){
-                        console.log("Ovo smo poslali treba biti 1 "+tijelo.predavanja);
                         obj[i].prisustva[j].predavanja = tijelo.predavanja;
                         obj[i].prisustva[j].vjezbe = tijelo.vjezbe;
                         usao=1;
@@ -85,6 +84,10 @@ app.post('/prisustvo/predmet/:naziv/student/:index', (req, res) => {
                     }
                 }
                 if(usao) break;
+                else{
+                    obj[i].prisustva.push({sedmica: tijelo.sedmica,predavanja: tijelo.predavanja,vjezbe:tijelo.vjezbe,index:indeks});
+                    break;
+                }
             }
         }
         var newData = JSON.stringify(obj);
@@ -120,16 +123,14 @@ app.post('/login', (req, res)=>{
                 }
                 session = req.session;
                 session.predmeti = list;
-                bcrypt.hash(pass, 10, function(err, hash) {
-                    if(bcrypt.compareSync(tijelo.password, hash)) {
-                        session.username = tijelo.username;
-                        res.send({"poruka":"Uspješna prijava"});
-                    }
-                    else{ 
-                        session = null;
-                        res.send({"poruka":"Neuspješna prijava"})
-                    }
-                });
+                if(bcrypt.compareSync(tijelo.password, pass)) {
+                    session.username = tijelo.username;
+                    res.send({"poruka":"Uspješna prijava"});
+                }
+                else{ 
+                    session = null;
+                    res.send({"poruka":"Neuspješna prijava"})
+                }
             }
         }
         if(usernameGreska) {

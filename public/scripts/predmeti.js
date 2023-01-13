@@ -27,8 +27,8 @@ function getString(k){
 
 function popuni(tbl, trenutnaSedmica, podaci, kolone) {
     tbl.innerHTML ="";
-    var ukupnoPredavanja = podaci.brojPredavanjaSedmicno;
-    var ukupnoVjezbi = podaci.brojVjezbiSedmicno;
+    let ukupnoPredavanja = podaci.brojPredavanjaSedmicno;
+    let ukupnoVjezbi = podaci.brojVjezbiSedmicno;
     for(let i=0; i<1; i++){
         const row = document.createElement("tr");
         var k = 1;
@@ -90,14 +90,19 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
             else if(j==trenutnaSedmica+1){
                 var ukupnoPrisustvo=0;
                 var usao = 0;
+                let up = 0;
+                let uk = 0;
                 for(let m=0; m<podaci.prisustva.length; m++){
                     if(trenutnaSedmica==podaci.prisustva[m].sedmica && podaci.prisustva[m].index == indeks){
                             ukupnoPrisustvo = podaci.prisustva[m].predavanja+podaci.prisustva[m].vjezbe;
+                            up = podaci.prisustva[m].predavanja;
+                            uk = podaci.prisustva[m].vjezbe;
                             usao=1;
                             break;
                         
                     }
                 }
+                console.log("Ovo su predavanja "+up+" ovo su vjezbe "+uk);
                 for(let m=0; m<2; m++){
                     const row2 = document.createElement("tr");
                     for(let l=0; l<ukupnoPredavanja; l++){
@@ -111,37 +116,57 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                         else{
                             const cell = document.createElement("td");
                             const cellText = document.createTextNode("");
-                            if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
-                            else if(!usao) cell.style.background = "white";
+                            if(up>0) {
+                                cell.style.background = "rgb(148,196,124)";
+                                up--;
+                                cell.addEventListener('click', function(e){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    predavanja--;
+                                    postPredmet(podaci.predmet,podaci.studenti[i].index, trenutnaSedmica, predavanja, vjezbe);
+                                })
+                            }
+                            else if(!usao || ukupnoPrisustvo == 0) {
+                                cell.style.background = "white";
+                                cell.addEventListener('click', function(e){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    predavanja++;
+                                    postPredmet(podaci.predmet,podaci.studenti[i].index, trenutnaSedmica, predavanja, vjezbe);
+                                })
+                            }
                             else {
                                 cell.style.background = "rgb(232,100,100)";
-                                crvena =1;
-                            }
-                            ukupnoPrisustvo--;
-                            cell.appendChild(cellText);
-                            cell.addEventListener('click', function(e){
-                                var vjezbe = 0;
-                                var predavanja = 0;
-                                var prisustvo = 0;
-                                var pomocna =0;
-                                var crvena=0;
-                                for(let n=0; n<podaci.prisustva.length; n++){
-                                    if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
-                                        vjezbe = podaci.prisustva[n].vjezbe;
-                                        predavanja = podaci.prisustva[n].predavanja;
-                                        prisustvo = vjezbe + predavanja;
-                                        pomocna = 1;
-                                        break;
+                                cell.addEventListener('click', function(e){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
                                     }
-                                }
-                                if(prisustvo>0) crvena = 1;
-                                else crvena=0;
-                                if(crvena) predavanja++;
-                                else if(!crvena && predavanja == 0 && vjezbe >0) vjezbe--;
-                                else predavanja--;
-                                console.log("Ovo je predavanje "+predavanja+" oov su vjezbe "+vjezbe);
-                                postPredmet(podaci.predmet,podaci.studenti[i].index, trenutnaSedmica, predavanja, vjezbe);
-                            })
+                                    predavanja++;
+                                    postPredmet(podaci.predmet,podaci.studenti[i].index, trenutnaSedmica, predavanja, vjezbe);
+                                })
+                            }
+                            //ukupnoPrisustvo--;
+                            cell.appendChild(cellText);
                             row2.appendChild(cell);
                         }
                         
@@ -158,35 +183,57 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                             const cell = document.createElement("td");
                             const cellText = document.createTextNode("");
                             cell.appendChild(cellText);
-                            var crvena = 0;
-                            if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
-                            else if(!usao) cell.style.background = "white";
+                            if(uk>0){
+                                cell.style.background = "rgb(148,196,124)";
+                                uk--;
+                                cell.addEventListener('click', function(){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    vjezbe--;
+                                    postPredmet(podaci.predmet,podaci.studenti[i].index, trenutnaSedmica, predavanja, vjezbe);
+                                })
+                            }
+                            else if(!usao || ukupnoPrisustvo == 0) {
+                                cell.style.background = "white";
+                                cell.addEventListener('click', function(){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    vjezbe++;
+                                    postPredmet(podaci.predmet,podaci.studenti[i].index, trenutnaSedmica, predavanja, vjezbe);
+                                })
+                            }
                             else {
                                 cell.style.background = "rgb(232,100,100)";
-                                crvena = 1;
-                            }
-                            ukupnoPrisustvo--;
-                            row2.appendChild(cell);
-                            cell.addEventListener('click', function(){
-                                var vjezbe = 0;
-                                var predavanja = 0;
-                                var prisustvo = 0;
-                                var pomocna =0;
-                                for(let n=0; n<podaci.prisustva.length; n++){
-                                    if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
-                                        vjezbe = podaci.prisustva[n].vjezbe;
-                                        predavanja = podaci.prisustva[n].predavanja;
-                                        prisustvo = vjezbe + predavanja;
-                                        pomocna = 1;
-                                        break;
+                                cell.addEventListener('click', function(){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
                                     }
-                                }
-                                if(crvena) vjezbe++;
-                                else if(!crvena && vjezbe == 0 && predavanja >0) predavanja--;
-                                else vjezbe--;
-                                console.log(" oov su vjezbe "+vjezbe);
-                                postPredmet(podaci.predmet,podaci.studenti[i].index, trenutnaSedmica, predavanja, vjezbe);
-                            })
+                                    vjezbe++;
+                                    postPredmet(podaci.predmet,podaci.studenti[i].index, trenutnaSedmica, predavanja, vjezbe);
+                                })
+                            }
+                            //ukupnoPrisustvo--;
+                            row2.appendChild(cell);
                         }
                     }
                     row2.style.width = "10px";
@@ -365,20 +412,28 @@ function getPredmet(element){
 }
 
 let callBack = function(err, data){
-    var ul = document.createElement('ul');
-    ul.setAttribute('id','proList');
-    document.getElementById('nastavnikPredmeti').appendChild(ul);
-    data.forEach(renderData);
-    function renderData(element, index, arr) {
-        var li = document.createElement('li');
-        li.setAttribute('class','item');
-        ul.appendChild(li);
-        li.innerHTML=li.innerHTML + element;
-        li.addEventListener('click', function(){
+    var p = document.getElementById('poruka');
+    if(err == null){
+        p.innerHTML = "Uspješna prijava";
+        var ul = document.createElement('ul');
+        ul.setAttribute('id','proList');
+        document.getElementById('nastavnikPredmeti').appendChild(ul);
+        data.forEach(renderData);
+        function renderData(element, index, arr) {
+            var li = document.createElement('li');
+            li.setAttribute('class','item');
+            ul.appendChild(li);
+            li.innerHTML=li.innerHTML + element;
+            li.addEventListener('click', function(){
             getPredmet(element);
-        })
+            })
+        }
     }
-    if(err != null) div.innerHTML = data.greska;
+    else {
+        p.innerHTML = err.greska;
+        var btn = document.getElementById('btn');
+        btn.innerHTML = "Nazad";
+    }
 }
 
 
@@ -391,10 +446,7 @@ window.onload = (event) => {
     getPredmeti();
   };
 
-  function myFunction() {
-    document.getElementById("myDropdown").classList.toggle("show");
-  }
-  
+
 
 function logOut(){
     PoziviAjax.postLogout(function(err, data){});

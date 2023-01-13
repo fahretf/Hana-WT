@@ -21,17 +21,14 @@ const PoziviAjax = (()=>{
     function impl_getPredmeti(fnCallback){
         const xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = function(){
-            if(xhttp.readyState == 4 && xhttp.status == 200){
+            if(xhttp.readyState == 4 && xhttp.status == 200 && JSON.parse(xhttp.responseText).greska == null){
                 fnCallback(null, JSON.parse(xhttp.responseText));
             }
-            else if(xhttp.readyState == 4 && xhttp.status == 401){
-                fnCallback(JSON.parse(xhttp.status, null));
+            else if(xhttp.readyState == 4){
+                fnCallback(JSON.parse(xhttp.responseText), null);
             }
         }
         xhttp.open("GET", "http://localhost:3000/predmeti", true);
-        // xhttp.setRequestHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-        // xhttp.setRequestHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-        // xhttp.setRequestHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
         xhttp.send();
     }
 
