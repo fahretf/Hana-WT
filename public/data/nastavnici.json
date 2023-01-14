@@ -1,11 +1,11 @@
 [
     {
-        "nastavnik": {"username": "USERNAME","password_hash": "$2b$10$jlU3XhlhHv59cy.koVvbKeVQHfB4m6jdp.TORGxdrHCcnVZLQmN9S"},
-        "predmeti": ["Razvoj mobilnih aplikacija","Web tehnologije","PREDMET3"]
+        "nastavnik": {"username": "Profesor1","password_hash": "$2b$10$jlU3XhlhHv59cy.koVvbKeVQHfB4m6jdp.TORGxdrHCcnVZLQmN9S"},
+        "predmeti": ["Razvoj mobilnih aplikacija","Web tehnologije","Tehnike programiranja"]
     },
     {
-        "nastavnik": {"username": "USERNAME2","password_hash": "PASSWORDHASH2"},
-        "predmeti": ["PREDMET1"]
+        "nastavnik": {"username": "Profesor2","password_hash": "$2a$12$xur/Q.5ofXGueQdDq3b9Juz2GDOjcYoOtQGZjLoqfA6584DVqgz0y"},
+        "predmeti": ["Uvod u programiranje"]
     }
 ]
     

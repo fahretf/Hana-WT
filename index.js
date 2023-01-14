@@ -40,6 +40,10 @@ app.get('/predmeti.html', (req, res)=>{
     res.sendFile(path.join(direName+'predmeti.html'));
 })
 
+app.get('/predmet.html', (req, res)=>{
+    res.sendFile(path.join(direName+'predmet.html'));
+})
+
 
 //servis
 app.get('/predmeti', (req, res)=>{
