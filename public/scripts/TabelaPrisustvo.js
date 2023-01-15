@@ -20,8 +20,8 @@ function getString(k){
 
 function popuni(tbl, trenutnaSedmica, podaci, kolone) {
     tbl.innerHTML ="";
-    var ukupnoPredavanja = podaci.brojPredavanjaSedmicno;
-    var ukupnoVjezbi = podaci.brojVjezbiSedmicno;
+    let ukupnoPredavanja = podaci.brojPredavanjaSedmicno;
+    let ukupnoVjezbi = podaci.brojVjezbiSedmicno;
     for(let i=0; i<1; i++){
         const row = document.createElement("tr");
         var k = 1;
@@ -83,15 +83,19 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
             else if(j==trenutnaSedmica+1){
                 var ukupnoPrisustvo=0;
                 var usao = 0;
+                let up = 0;
+                let uk = 0;
                 for(let m=0; m<podaci.prisustva.length; m++){
-                    if(trenutnaSedmica==podaci.prisustva[m].sedmica){
-                        if(podaci.prisustva[m].index == indeks){
+                    if(trenutnaSedmica==podaci.prisustva[m].sedmica && podaci.prisustva[m].index == indeks){
                             ukupnoPrisustvo = podaci.prisustva[m].predavanja+podaci.prisustva[m].vjezbe;
+                            up = podaci.prisustva[m].predavanja;
+                            uk = podaci.prisustva[m].vjezbe;
                             usao=1;
                             break;
-                        }
+                        
                     }
                 }
+                console.log("Ovo su predavanja "+up+" ovo su vjezbe "+uk);
                 for(let m=0; m<2; m++){
                     const row2 = document.createElement("tr");
                     for(let l=0; l<ukupnoPredavanja; l++){
@@ -105,11 +109,73 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                         else{
                             const cell = document.createElement("td");
                             const cellText = document.createTextNode("");
-                            cell.setAttribute('id', 'predavanjaP');
-                            if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
-                            else if(!usao) cell.style.background = "white";
-                            else cell.style.background = "rgb(232,100,100)";
-                            ukupnoPrisustvo--;
+                            if(up>0) {
+                                cell.style.background = "rgb(148,196,124)";
+                                up--;
+                                cell.addEventListener('click', function(e){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    predavanja--;
+                                    PoziviAjax.postPrisustvo(podaci.predmet, podaci.studenti[i].index, {sedmica:trenutnaSedmica, predavanja:predavanja, vjezbe:vjezbe}, function(err, data){
+                                        PoziviAjax.getPredmet(podaci.predmet, function(err, data){
+                                            let div = document.getElementById('predmet');
+                                            console.log("tabela prisustvo");
+                                            TabelaPrisustvo(div, data);
+                                        })
+                                    });
+                                })
+                            }
+                            else if(!usao || ukupnoPrisustvo == 0) {
+                                cell.style.background = "white";
+                                cell.addEventListener('click', function(e){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    predavanja++;
+                                    PoziviAjax.postPrisustvo(podaci.predmet, podaci.studenti[i].index, {sedmica:trenutnaSedmica, predavanja:predavanja, vjezbe:vjezbe}, function(err, data){
+                                        PoziviAjax.getPredmet(podaci.predmet, function(err, data){
+                                            let div = document.getElementById('predmet');
+                                            console.log("tabela prisustvo");
+                                            TabelaPrisustvo(div, data);
+                                        })
+                                    });
+                                })
+                            }
+                            else {
+                                cell.style.background = "rgb(232,100,100)";
+                                cell.addEventListener('click', function(e){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    predavanja++;
+                                    PoziviAjax.postPrisustvo(podaci.predmet, podaci.studenti[i].index, {sedmica:trenutnaSedmica, predavanja:predavanja, vjezbe:vjezbe}, function(err, data){
+                                        PoziviAjax.getPredmet(podaci.predmet, function(err, data){
+                                            let div = document.getElementById('predmet');
+                                            console.log("tabela prisustvo");
+                                            TabelaPrisustvo(div, data);
+                                        })
+                                    });
+                                })
+                            }
                             cell.appendChild(cellText);
                             row2.appendChild(cell);
                         }
@@ -125,13 +191,75 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                         }
                         else{
                             const cell = document.createElement("td");
-                            cell.setAttribute('id', 'vjezbeP');
                             const cellText = document.createTextNode("");
                             cell.appendChild(cellText);
-                            if(ukupnoPrisustvo>0) cell.style.background = "rgb(148,196,124)";
-                            else if(!usao) cell.style.background = "white";
-                            else cell.style.background = "rgb(232,100,100)";
-                            ukupnoPrisustvo--;
+                            if(uk>0){
+                                cell.style.background = "rgb(148,196,124)";
+                                uk--;
+                                cell.addEventListener('click', function(){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    vjezbe--;
+                                    PoziviAjax.postPrisustvo(podaci.predmet, podaci.studenti[i].index, {sedmica:trenutnaSedmica, predavanja:predavanja, vjezbe:vjezbe}, function(err, data){
+                                        PoziviAjax.getPredmet(podaci.predmet, function(err, data){
+                                            let div = document.getElementById('predmet');
+                                            console.log("tabela prisustvo");
+                                            TabelaPrisustvo(div, data);
+                                        })
+                                    });
+                                })
+                            }
+                            else if(!usao || ukupnoPrisustvo == 0) {
+                                cell.style.background = "white";
+                                cell.addEventListener('click', function(){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    vjezbe++;
+                                    PoziviAjax.postPrisustvo(podaci.predmet, podaci.studenti[i].index, {sedmica:trenutnaSedmica, predavanja:predavanja, vjezbe:vjezbe}, function(err, data){
+                                        PoziviAjax.getPredmet(podaci.predmet, function(err, data){
+                                            let div = document.getElementById('predmet');
+                                            console.log("tabela prisustvo");
+                                            TabelaPrisustvo(div, data);
+                                        })
+                                    });
+                                })
+                            }
+                            else {
+                                cell.style.background = "rgb(232,100,100)";
+                                cell.addEventListener('click', function(){
+                                    var vjezbe = 0;
+                                    var predavanja = 0;
+                                    for(let n=0; n<podaci.prisustva.length; n++){
+                                        if(trenutnaSedmica==podaci.prisustva[n].sedmica && podaci.prisustva[n].index == podaci.studenti[i].index){
+                                            vjezbe = podaci.prisustva[n].vjezbe;
+                                            predavanja = podaci.prisustva[n].predavanja;
+                                            break;
+                                        }
+                                    }
+                                    vjezbe++;
+                                    PoziviAjax.postPrisustvo(podaci.predmet, podaci.studenti[i].index, {sedmica:trenutnaSedmica, predavanja:predavanja, vjezbe:vjezbe}, function(err, data){
+                                        PoziviAjax.getPredmet(podaci.predmet, function(err, data){
+                                            let div = document.getElementById('predmet');
+                                            console.log("tabela prisustvo");
+                                            TabelaPrisustvo(div, data);
+                                        })
+                                    });
+                                })
+                            }
                             row2.appendChild(cell);
                         }
                     }
