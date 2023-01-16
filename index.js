@@ -1,4 +1,5 @@
 const express = require('express');
+const baza = require('./baza.js');
 const app = express();
 const path = require('path');
 const PORT = 3000;
@@ -12,7 +13,7 @@ const router = express.Router();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 var session;
-//app.use(express.json());
+
 const direName = __dirname+'/public/html/';
 
 app.use(express.static('public'));
@@ -27,6 +28,14 @@ app.use(sessions({
 
 app.use(cookieParser());
 
+const {predmet} = require('./baza.js');
+const {student} = require('./baza.js');
+const {nastavnik} = require('./baza.js');
+const {prisustvo} = require('./baza.js');
+const db = require('./baza.js');
+const { stringify } = require('querystring');
+const { promisify } = require('util');
+const { Z_ASCII } = require('zlib');
 //rute
 app.get('/prisustvo.html', (req, res)=>{
     res.sendFile(path.join(direName+'prisustvo.html'));
@@ -55,16 +64,36 @@ app.get('/predmeti', (req, res)=>{
     }
 })
 
-app.get('/predmet/:naziv', (req, res)=>{
-    fs.readFile(__dirname+'/public/data/prisustva.json', function(err, data){
-        let nazivPredmeta = req.params.naziv;
-        const obj = JSON.parse(data);
-        for(var i in obj){
-            if(obj[i].predmet == nazivPredmeta){
-                res.send(JSON.stringify(obj[i]));
-            }
-        }
-    })
+
+app.get('/predmet/:naziv', async (req, res)=>{
+    let nazivPredmeta = req.params.naziv;
+    const predmet = await db.predmet.findOne({where:{predmet: nazivPredmeta}});
+    let prisustva = await predmet.getPrisustva();
+    let listaStudenata = [];
+    prisustva.forEach(x =>{
+        var item = db.student.findOne({where: {id:x.studentId}});
+        if(listaStudenata.indexOf(item) == -1) listaStudenata.push(item);
+    });
+    console.log('RETARDE BUDI POZITIVAN '+listaStudenata.length);
+    listaStudenata.forEach(x=>console.log("Lista studenata "+x.ime));
+    //console.loge("Ovo je "+listaStudenata[0].ime);
+    // prisustva.prisustva = await predmet.getPrisustva().then(await function(n){
+    //     var lista = [];
+    //     n.forEach(x => lista.push(x));
+    //     return lista;
+    // });
+    // prisustva.predmet = predmet.naziv;
+    // prisustva.brojPredavanjaSedmicno = predmet.brojPredavanjaSedmicno;
+    // prisustva.brojVjezbiSedmicno = predmet.brojVjezbiSedmicno;
+    // fs.readFile(__dirname+'/public/data/prisustva.json', function(err, data){
+    //     let nazivPredmeta = req.params.naziv;
+    //     const obj = JSON.parse(data);
+    //     for(var i in obj){
+    //         if(obj[i].predmet == nazivPredmeta){
+    //             res.send(JSON.stringify(obj[i]));
+    //         }
+    //     }
+    // })
 })
 
 
@@ -109,41 +138,35 @@ app.post('/prisustvo/predmet/:naziv/student/:index', (req, res) => {
 })
 
 
-app.post('/login', (req, res)=>{
-    fs.readFile(__dirname+'/public/data/nastavnici.json', function(error, data){
-        let tijelo = req.body;
-        var usernameGreska = true;
-        if(error){
-            return console.log(error);
+app.post('/login', async (req, res)=>{
+    let tijelo = req.body;
+    let profesor = await db.nastavnik.findOne({where:{username:tijelo.username}});
+    if(profesor == null){
+        res.send({"poruka":"Neuspješna prijava"})
+    }
+    else{
+        let pass=profesor.password_hash;
+        if(bcrypt.compareSync(tijelo.password, pass)) {
+            session = req.session;
+            session.username = tijelo.username;
+            let lista = await profesor.getPredmeti().then(await function(p){
+                var l = [];
+                p.forEach(x => { l.push(x.predmet)})
+                return l;
+            });
+            session.predmeti = lista;
+            res.send({"poruka":"Uspješna prijava"});
         }
-        const obj = JSON.parse(data);
-        for(var i in obj){
-            if(obj[i].nastavnik.username == tijelo.username){
-                usernameGreska = false;
-                var pass = obj[i].nastavnik.password_hash;
-                var list = [];
-                for(var o in obj[i].predmeti){
-                    list.push(obj[i].predmeti[o]);
-                }
-                session = req.session;
-                session.predmeti = list;
-                if(bcrypt.compareSync(tijelo.password, pass)) {
-                    session.username = tijelo.username;
-                    res.send({"poruka":"Uspješna prijava"});
-                }
-                else{ 
-                    session = null;
-                    res.send({"poruka":"Neuspješna prijava"})
-                }
-            }
-        }
-        if(usernameGreska) {
+        else{ 
             session = null;
             res.send({"poruka":"Neuspješna prijava"})
         }
-    });
+    }
     
-})
+});
+
+    
+
 
 app.post('/logout', (req, res)=>{
     session = null;
