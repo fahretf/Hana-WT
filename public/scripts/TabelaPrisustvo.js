@@ -282,7 +282,7 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                         }
                     }
                 }
-                var ukupno;
+                let ukupno = 0;
                 if(brPredavanja==0 && brVjezbi==0) ukupno = 0;
                 else ukupno = (brPredavanja+brVjezbi)/(ukupnoPredavanja+ukupnoVjezbi) *100;
                 const cellText = document.createTextNode(ukupno+"%");

@@ -4,7 +4,7 @@ module.exports = function(sequelize,DataTypes){
     const Predmet = sequelize.define("predmet",{
         predmet: Sequelize.STRING,
         brojPredavanjaSedmicno:Sequelize.INTEGER,
-        brojVjezbiSedmicno:Sequelize.STRING
+        brojVjezbiSedmicno:Sequelize.INTEGER
     })
     return Predmet;
 };

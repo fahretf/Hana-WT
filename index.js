@@ -36,6 +36,7 @@ const db = require('./baza.js');
 const { stringify } = require('querystring');
 const { promisify } = require('util');
 const { Z_ASCII } = require('zlib');
+const { Op, literal, fn } = require('sequelize');
 //rute
 app.get('/prisustvo.html', (req, res)=>{
     res.sendFile(path.join(direName+'prisustvo.html'));
@@ -68,73 +69,55 @@ app.get('/predmeti', (req, res)=>{
 app.get('/predmet/:naziv', async (req, res)=>{
     let nazivPredmeta = req.params.naziv;
     const predmet = await db.predmet.findOne({where:{predmet: nazivPredmeta}});
-    let prisustva = await predmet.getPrisustva();
+    let prisustvaLista = await predmet.getPrisustva();
+    var listaIndexa  = [];
+    let prisustva = [];
+    prisustvaLista.map(x => {
+        if(listaIndexa.indexOf(x.index) == -1) listaIndexa.push(x.index);
+        prisustva.push({sedmica: x.sedmica, predavanja: x.predavanja, vjezbe: x.vjezbe, index: x.index, nazivPredmeta: x.predmet});
+    })
     let listaStudenata = [];
-    prisustva.forEach(x =>{
-        var item = db.student.findOne({where: {id:x.studentId}});
-        if(listaStudenata.indexOf(item) == -1) listaStudenata.push(item);
+    const student = await db.student.findAll();
+    student.map(x => {
+        if(listaIndexa.indexOf(x.index) > -1) listaStudenata.push({ime:x.ime, index:x.index});
     });
-    console.log('RETARDE BUDI POZITIVAN '+listaStudenata.length);
-    listaStudenata.forEach(x=>console.log("Lista studenata "+x.ime));
-    //console.loge("Ovo je "+listaStudenata[0].ime);
-    // prisustva.prisustva = await predmet.getPrisustva().then(await function(n){
-    //     var lista = [];
-    //     n.forEach(x => lista.push(x));
-    //     return lista;
-    // });
-    // prisustva.predmet = predmet.naziv;
-    // prisustva.brojPredavanjaSedmicno = predmet.brojPredavanjaSedmicno;
-    // prisustva.brojVjezbiSedmicno = predmet.brojVjezbiSedmicno;
-    // fs.readFile(__dirname+'/public/data/prisustva.json', function(err, data){
-    //     let nazivPredmeta = req.params.naziv;
-    //     const obj = JSON.parse(data);
-    //     for(var i in obj){
-    //         if(obj[i].predmet == nazivPredmeta){
-    //             res.send(JSON.stringify(obj[i]));
-    //         }
-    //     }
-    // })
+    let prisustvo = {predmet: nazivPredmeta, brojPredavanjaSedmicno: predmet.brojPredavanjaSedmicno, brojVjezbiSedmicno: predmet.brojVjezbiSedmicno, prisustva: prisustva, studenti: listaStudenata};
+    res.send(JSON.stringify(prisustvo));
 })
 
 
-app.post('/prisustvo/predmet/:naziv/student/:index', (req, res) => {
-    fs.readFile(__dirname+'/public/data/prisustva.json', function(err, data){
-        let tijelo = req.body;
-        let naziv = req.params.naziv;
-        let indeks = req.params.index;
-        var obj = JSON.parse(data);
-        console.log("OBJEKAT JE STAA "+ obj[0].predmet);
-        var usao = 0;
-        for(i in obj){
-            if(obj[i].predmet == naziv){
-                var prisustva = obj[i].prisustva;
-                for(let j in prisustva){
-                    if(prisustva[j].index == indeks && tijelo.sedmica == prisustva[j].sedmica){
-                        obj[i].prisustva[j].predavanja = tijelo.predavanja;
-                        obj[i].prisustva[j].vjezbe = tijelo.vjezbe;
-                        usao=1;
-                        break; 
-                    }
-                }
-                if(usao) break;
-                else{
-                    obj[i].prisustva.push({sedmica: tijelo.sedmica,predavanja: tijelo.predavanja,vjezbe:tijelo.vjezbe,index:indeks});
-                    break;
-                }
-            }
+app.post('/prisustvo/predmet/:naziv/student/:index', async (req, res) => {
+    let tijelo = req.body; //{sedmica, vjezbe, predavanja, index}
+    let naziv = req.params.naziv;
+    let indeks = req.params.index;
+    var predmet = await db.predmet.findOne({where:{predmet:naziv}});
+    const updateRows = db.prisustvo.update({
+        predavanja: tijelo.predavanja,
+        vjezbe: tijelo.vjezbe
+    },
+    {
+        where:{
+        predmetId: predmet.id,
+        index: indeks,
+        sedmica: tijelo.sedmica
         }
-        var newData = JSON.stringify(obj);
-        console.log("NOVA DATA "+newData);
-        fs.writeFile(__dirname+'/public/data/prisustva.json', newData, function (err) {
-            if (err) {
-                console.log("An error occured while writing JSON Object to File.");
-                return console.log(err);
-            }
-         
-            console.log("JSON file has been saved.");
-        });
-        res.send(JSON.stringify(obj));
     });
+    console.log(updateRows);
+
+    let prisustvaLista = await predmet.getPrisustva();
+    var listaIndexa  = [];
+    let prisustva = [];
+    prisustvaLista.map(x => {
+        if(listaIndexa.indexOf(x.index) == -1) listaIndexa.push(x.index);
+        prisustva.push({sedmica: x.sedmica, predavanja: x.predavanja, vjezbe: x.vjezbe, index: x.index, nazivPredmeta: x.predmet});
+    })
+    let listaStudenata = [];
+    const student = await db.student.findAll();
+    student.map(x => {
+        if(listaIndexa.indexOf(x.index) > -1) listaStudenata.push({ime:x.ime, index:x.index});
+    });
+    let prisustvo = {predmet: naziv, brojPredavanjaSedmicno: predmet.brojPredavanjaSedmicno, brojVjezbiSedmicno: predmet.brojVjezbiSedmicno, prisustva: prisustva, studenti: listaStudenata};
+    res.send(JSON.stringify(prisustvo));
 })
 
 

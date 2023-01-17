@@ -7,8 +7,7 @@ module.exports = function(sequelize,DataTypes){
         predavanja:Sequelize.INTEGER,
         vjezbe:Sequelize.INTEGER,
         index:Sequelize.INTEGER,
-        predmet:Sequelize.STRING,
-        student: student
+        nazivPredmeta:Sequelize.STRING
     })
     return Prisustvo;
 };

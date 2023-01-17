@@ -1,7 +1,6 @@
 function getPredmet(element){
     PoziviAjax.getPredmet(element, function(err, data){
         let div = document.getElementById('predmet');
-        console.log("tabela prisustvo");
         TabelaPrisustvo(div, data);
     })
 }
