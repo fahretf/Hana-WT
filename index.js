@@ -1,5 +1,5 @@
 const express = require('express');
-const baza = require('./baza.js');
+const db = require('./baza.js');
 const app = express();
 const path = require('path');
 const PORT = 3000;
@@ -16,6 +16,7 @@ var session;
 
 const direName = __dirname+'/public/html/';
 
+app.use(express.static('public/html'));
 app.use(express.static('public'));
 
 const oneDay = 1000 * 60 * 60 * 24;
@@ -27,32 +28,6 @@ app.use(sessions({
 }))
 
 app.use(cookieParser());
-
-const {predmet} = require('./baza.js');
-const {student} = require('./baza.js');
-const {nastavnik} = require('./baza.js');
-const {prisustvo} = require('./baza.js');
-const db = require('./baza.js');
-const { stringify } = require('querystring');
-const { promisify } = require('util');
-const { Z_ASCII } = require('zlib');
-const { Op, literal, fn } = require('sequelize');
-//rute
-app.get('/prisustvo.html', (req, res)=>{
-    res.sendFile(path.join(direName+'prisustvo.html'));
-});
-
-app.get('/prijava.html', (req, res)=>{
-    res.sendFile(path.join(direName+'prijava.html'))
-});
-
-app.get('/predmeti.html', (req, res)=>{
-    res.sendFile(path.join(direName+'predmeti.html'));
-})
-
-app.get('/predmet.html', (req, res)=>{
-    res.sendFile(path.join(direName+'predmet.html'));
-})
 
 
 //servis

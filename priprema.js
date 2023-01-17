@@ -1,12 +1,7 @@
 const db = require('./baza.js');
-db.sequelize.sync({force:true}).then(function(){
-    inicializacija().then(function(){
-        console.log("Gotovo kreiranje tabela i ubacivanje pocetnih podataka!");
-        process.exit();
-    });
-});
 
-function inicializacija(){
+
+function seeder(){
     var profesor1, profesor2;
     var predmetListPromisea=[];
     var profesoriListaPromisea=[];
@@ -102,3 +97,5 @@ function inicializacija(){
         });
     })
 }
+
+seeder();

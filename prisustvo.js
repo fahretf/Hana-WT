@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const student = require("./student");
+const sequelize = require("./baza.js");
 
 module.exports = function(sequelize,DataTypes){
     const Prisustvo = sequelize.define("prisustvo",{
