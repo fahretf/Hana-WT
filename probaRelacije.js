@@ -20,12 +20,14 @@ async function primjeriUpita(){
     
     var predmet = await db.predmet.findOne({where:{predmet:'Tehnike programiranja'}});
     var prisustva = await db.prisustvo.findOne({where:{[Op.and]:[{predmetId: predmet.id}, {index:18628}, {sedmica: 1}]}});
+   
     //{sedmica, vjezbe, predavanja, index} 
     //console.log(prisustvo);
     // let prisustvo = null;
     // prisustva.map(x => {
     //     if(x.index == 18628 && x.sedmica === 1) prisustvo = {sedmica : x.sedmica, vjezbe : x.vjezbe, predavanja : x.predavanja, index: x.index, nazivPredmeta: x.nazivPredmeta}; 
     // });
+
     const updateRows = db.prisustvo.update({
         predavanja: 1,
         vjezbe: 1

@@ -1,5 +1,6 @@
 const express = require('express');
-const db = require('./baza.js');
+const Sequelize = require("sequelize");
+const sequelize = require('./baza.js');
 const app = express();
 const path = require('path');
 const PORT = 3000;
@@ -8,7 +9,24 @@ const bcrypt = require("bcrypt");
 const sessions = require("express-session")
 const cookieParser = require("cookie-parser");
 const fs=require('fs');
-const router = express.Router();
+const s = require('./priprema.js');
+const {Op, literal, fn} = require('sequelize');
+const db={};
+
+db.Sequelize = Sequelize;  
+
+//import modela
+db.nastavnik = require('./nastavnik.js') (sequelize);
+db.student = require('./student.js') (sequelize);
+db.predmet = require('./predmet.js') (sequelize);
+db.prisustvo = require('./prisustvo.js') (sequelize);
+
+db.student.hasMany(db.prisustvo,{as:'prisustva'});
+db.predmet.hasMany(db.prisustvo, {as : 'prisustva'});
+db.nastavnik.hasMany(db.predmet, {as: "predmeti"});
+
+sequelize.sync().then(()=>{s.seeder(db)});
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -66,7 +84,13 @@ app.post('/prisustvo/predmet/:naziv/student/:index', async (req, res) => {
     let naziv = req.params.naziv;
     let indeks = req.params.index;
     var predmet = await db.predmet.findOne({where:{predmet:naziv}});
-    const updateRows = db.prisustvo.update({
+    var prisustvoExist = await db.prisustvo.findOne({where:{[Op.and]:[{nazivPredmeta: naziv}, {index:indeks}, {sedmica: tijelo.sedmica}]}});
+    if(prisustvoExist == null){
+        var studentId = await db.student.findOne({where:{index: indeks}});
+        var novo = {sedmica: tijelo.sedmica, predavanja: tijelo.predavanja, vjezbe: tijelo.vjezbe, index: indeks, nazivPredmeta: naziv, studentId: studentId.id, predmetId: predmet.id}
+        await db.prisustvo.create(novo);
+    }
+    const updateRows = await db.prisustvo.update({
         predavanja: tijelo.predavanja,
         vjezbe: tijelo.vjezbe
     },

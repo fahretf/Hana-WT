@@ -1,7 +1,4 @@
-const db = require('./baza.js');
-
-
-function seeder(){
+function seeder(db){
     var profesor1, profesor2;
     var predmetListPromisea=[];
     var profesoriListaPromisea=[];
@@ -62,7 +59,7 @@ function seeder(){
             prisustvaListaPromisea.push(db.prisustvo.create({sedmica:2,predavanja:2,vjezbe:2,index:18628, nazivPredmeta:'Tehnike programiranja'}));
             prisustvaListaPromisea.push(db.prisustvo.create({sedmica:3,predavanja:2,vjezbe:2,index:12346, nazivPredmeta:'Tehnike programiranja'}));
             prisustvaListaPromisea.push(db.prisustvo.create({sedmica:3,predavanja:2,vjezbe:2,index:12345, nazivPredmeta:'Tehnike programiranja'}));
-            prisustvaListaPromisea.push(db.prisustvo.create({sedmica:3,predavanja:2,vjezbe:2,index:18628, nazivPredmeta:'Tehnike programiranja'}));
+            //prisustvaListaPromisea.push(db.prisustvo.create({sedmica:3,predavanja:2,vjezbe:2,index:18628, nazivPredmeta:'Tehnike programiranja'}));
             //uup
             prisustvaListaPromisea.push(db.prisustvo.create({sedmica:1,predavanja:2,vjezbe:1,index:12345, nazivPredmeta:'Uvod u programiranje'}));
             prisustvaListaPromisea.push(db.prisustvo.create({sedmica:1,predavanja:2,vjezbe:2,index:12346, nazivPredmeta:'Uvod u programiranje'}));
@@ -98,4 +95,4 @@ function seeder(){
     })
 }
 
-seeder();
+module.exports = {seeder};

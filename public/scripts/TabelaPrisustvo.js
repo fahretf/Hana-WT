@@ -132,7 +132,7 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                                     });
                                 })
                             }
-                            else if(!usao || ukupnoPrisustvo == 0) {
+                            else if(!usao) {
                                 cell.style.background = "white";
                                 cell.addEventListener('click', function(e){
                                     var vjezbe = 0;
@@ -216,7 +216,7 @@ function popuni(tbl, trenutnaSedmica, podaci, kolone) {
                                     });
                                 })
                             }
-                            else if(!usao || ukupnoPrisustvo == 0) {
+                            else if(!usao) {
                                 cell.style.background = "white";
                                 cell.addEventListener('click', function(){
                                     var vjezbe = 0;
