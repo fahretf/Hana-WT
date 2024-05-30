@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 
-const sequelize = new Sequelize("wt22","root","root",{
-    host:"mysql-db",
+const sequelize = new Sequelize("DBWT19",`${process.env.MYSQL_USER}`,`${process.env.MYSQL_PASSWORD}`,{
+    host:`${process.env.MYSQL_DB_HOST}`,
     createDatabaseIfNotExist: true,
     dialect:"mysql"}
     );
@@ -9,7 +9,7 @@ const sequelize = new Sequelize("wt22","root","root",{
 
 sequelize
   //.authenticate()
-  .query("CREATE DATABASE IF NOT EXISTS `wt22`")
+  .query("CREATE DATABASE IF NOT EXISTS `DBWT19`")
   .then(() => {
     console.log('Connection has been established successfully.');
   })

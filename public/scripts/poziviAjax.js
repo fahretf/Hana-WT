@@ -14,7 +14,7 @@ const PoziviAjax = (()=>{
             }
         }
         console.log("Pozoves li se ikad?");
-        xhttp.open("GET", `http://localhost:3000/predmet/${naziv}`, true);
+        xhttp.open("GET", `http://localhost:8080/predmet/${naziv}`, true);
         xhttp.send();
     }
     // vraća listu predmeta za loginovanog nastavnika ili grešku da nastavnik nije loginovan
@@ -28,7 +28,7 @@ const PoziviAjax = (()=>{
                 fnCallback(JSON.parse(xhttp.responseText), null);
             }
         }
-        xhttp.open("GET", "http://localhost:3000/predmeti", true);
+        xhttp.open("GET", "http://localhost:8080/predmeti", true);
         xhttp.send();
     }
 
@@ -48,7 +48,7 @@ const PoziviAjax = (()=>{
             }
         };
 
-        xhttp.open("POST", "http://localhost:3000/login", true);
+        xhttp.open("POST", "http://localhost:8080/login", true);
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.send(JSON.stringify({username:username.value,password:password.value}));
     }
@@ -59,13 +59,13 @@ const PoziviAjax = (()=>{
         xhttp.onreadystatechange = function(){
             if(xhttp.readyState == 4 && xhttp.status == 200){
                 fnCallback(null, xhttp.status);
-                location.replace("http://localhost:3000"+xhttp.responseText);
+                location.replace("http://localhost:8080"+xhttp.responseText);
             }
             else if(xhttp.readyState == 4 && xhttp.status == 401){
                 fnCallback(xhttp.status, null);
             }
         }
-        xhttp.open("POST", "http://localhost:3000/logout", true);
+        xhttp.open("POST", "http://localhost:8080/logout", true);
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.send(JSON.stringify({poruka:"Hello and goodbye"}));
     }
@@ -82,7 +82,7 @@ const PoziviAjax = (()=>{
             }
         }
 
-        xhttp.open("POST", `http://localhost:3000/prisustvo/predmet/${naziv}/student/${index}`, true);
+        xhttp.open("POST", `http://localhost:8080/prisustvo/predmet/${naziv}/student/${index}`, true);
         xhttp.setRequestHeader("Content-type", "application/json");
         xhttp.send(JSON.stringify(prisustvo));
     }
