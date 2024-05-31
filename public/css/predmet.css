@@ -31,7 +31,7 @@ html{
 
 .rs_1, .rs_2, .bsc_1, .bsc_2, .bsc_3, .msc_1, .msc_2{
     display: grid;
-    background-color:black;
+    background-color:greenyellow;
     padding: 10px;
     column-gap: 10px;
     row-gap: 1em;
